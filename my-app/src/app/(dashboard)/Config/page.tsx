@@ -1,5 +1,4 @@
-import MenuBarComponent from "../components/MenuBarComponent";
-
+import MenuBarComponent from "../layout";
 export default function ConfigPage() {
   return (
     <div className="flex">

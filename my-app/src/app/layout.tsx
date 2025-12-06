@@ -1,5 +1,9 @@
 import "./globals.css";
 
+export const metadata = {
+  title: "Sistema",
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -7,7 +11,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br">
-      <body className="antialiased">{children}</body>
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
+
+      <body className="bg-gray-100 min-h-screen">{children}</body>
     </html>
   );
 }
