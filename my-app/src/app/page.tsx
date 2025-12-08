@@ -1,20 +1,35 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import logo from "./Images/Kero Caixa Sem Fundo.png";
 import eyeOn from "./Images/eye-svgrepo-com.svg";
 import eyeOff from "./Images/eye-off-svgrepo-com.svg";
 import carousel1 from "./Images/Caixa sem fundo1.png";
 import carousel2 from "./Images/Caixa sem fundo2.png";
 
+type Slide = { id: string; image: StaticImageData; isClone?: boolean };
+
 export default function LoginPage() {
   const router = useRouter();
-  const baseSlides = [carousel1, carousel2];
-  const slides = [baseSlides[baseSlides.length - 1], ...baseSlides, baseSlides[0]];
+  const baseSlides = useMemo<Slide[]>(
+    () => [
+      { id: "slide-1", image: carousel1 },
+      { id: "slide-2", image: carousel2 },
+    ],
+    []
+  );
+
+  const slides = useMemo<Slide[]>(() => {
+    const head = { ...baseSlides[baseSlides.length - 1], id: "clone-head", isClone: true };
+    const tail = { ...baseSlides[0], id: "clone-tail", isClone: true };
+    return [head, ...baseSlides.map((s, idx) => ({ ...s, id: `body-${idx}` })), tail];
+  }, [baseSlides]);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -24,43 +39,49 @@ export default function LoginPage() {
   const [transitioning, setTransitioning] = useState(false);
   const emailInvalid = email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const nextSlide = () => {
+  const goToIndex = (next: number) => {
+    if (transitioning) return; // avoid double clicks during animation
+    const clamped = Math.min(Math.max(next, 0), slides.length - 1);
     setTransitioning(true);
-    setSlideIndex((prev) => prev + 1);
+    setSlideIndex(clamped);
   };
-  const prevSlide = () => {
-    setTransitioning(true);
-    setSlideIndex((prev) => prev - 1);
-  };
+  const nextSlide = () => goToIndex(slideIndex + 1);
+  const prevSlide = () => goToIndex(slideIndex - 1);
 
   const handleTransitionEnd = () => {
-    if (slideIndex === slides.length - 1) {
+    if (slideIndex >= slides.length - 1) {
       setTransitioning(false);
       setSlideIndex(1);
-    } else if (slideIndex === 0) {
+      return;
+    }
+    if (slideIndex <= 0) {
       setTransitioning(false);
       setSlideIndex(slides.length - 2);
-    } else {
-      setTransitioning(false);
+      return;
     }
+    setTransitioning(false);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (emailInvalid) return;
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+        callbackUrl: "/Dashboard",
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Erro ao entrar");
+
+      if (result?.error) {
+        setError(result.error === "CredentialsSignin" ? "Credenciais invalidas." : result.error);
         return;
       }
-      router.push("/Dashboard");
+
+      router.push(result?.url || "/Dashboard");
+      router.refresh();
     } catch (err) {
       setError("Erro de rede ao entrar.");
     } finally {
@@ -74,7 +95,9 @@ export default function LoginPage() {
       setSlideIndex((prev) => prev + 1);
     }, 6000);
     return () => clearInterval(id);
-  }, [slides.length]);
+  }, []);
+
+  const visibleIndex = (slideIndex - 1 + baseSlides.length) % baseSlides.length;
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-white text-slate-900">
@@ -88,12 +111,15 @@ export default function LoginPage() {
             }}
             onTransitionEnd={handleTransitionEnd}
           >
-            {slides.map((img, idx) => (
-              <div
-                key={`${img.src}-${idx}`}
-                className="w-full flex-shrink-0 flex items-center justify-center"
-              >
-                <Image src={img} alt="Kero Caixa" className="h-[70vh] w-auto object-contain" priority />
+            {slides.map((slide) => (
+              <div key={slide.id} className="w-full flex-shrink-0 flex items-center justify-center">
+                <Image
+                  src={slide.image}
+                  alt="Kero Caixa"
+                  className="h-[70vh] w-auto object-contain"
+                  priority
+                  unoptimized={slide.isClone}
+                />
               </div>
             ))}
           </div>
@@ -117,16 +143,11 @@ export default function LoginPage() {
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 text-white text-xl">
           {baseSlides.map((_, idx) => (
             <button
-              key={idx}
+              key={`dot-${idx}`}
               type="button"
-              onClick={() => {
-                setTransitioning(true);
-                setSlideIndex(idx + 1);
-              }}
+              onClick={() => goToIndex(idx + 1)}
               className={`h-2 w-2 rounded-full transition ${
-                idx === ((slideIndex - 1 + baseSlides.length) % baseSlides.length)
-                  ? "bg-white"
-                  : "bg-white/50"
+                idx === visibleIndex ? "bg-white" : "bg-white/50"
               }`}
               aria-label={`Ir para slide ${idx + 1}`}
             />
@@ -138,7 +159,6 @@ export default function LoginPage() {
         <div className="w-full max-w-xl space-y-8">
           <div className="text-center space-y-4">
             <Image src={logo} alt="Kero Caixa" className="mx-auto h-14 w-auto" priority />
-            <p className="text-slate-500 text-sm">Acesse sua conta para continuar</p>
           </div>
 
           <form className="space-y-4" onSubmit={handleLogin}>

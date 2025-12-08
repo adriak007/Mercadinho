@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import logoTop from "../Images/Kero Caixa Sem Fundo.png";
 import MenuBarComponent from "./MenuBarComponent";
 
@@ -12,6 +12,7 @@ type UserInfo = {
 };
 
 export default function Shell({ children }: { children: ReactNode }) {
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -36,6 +37,26 @@ export default function Shell({ children }: { children: ReactNode }) {
   }, []);
 
   const avatarLetter = user?.name?.[0]?.toUpperCase() || "U";
+
+  const clearAuthCookies = () => {
+    const names = ["next-auth.callback-url", "next-auth.csrf-token", "next-auth.session-token", "auth_token"];
+    names.forEach((name) => {
+      document.cookie = `${name}=; Max-Age=0; path=/; SameSite=Lax`;
+    });
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    } catch {
+    } finally {
+      clearAuthCookies();
+      setUser(null);
+      setUserMenuOpen(false);
+      router.push("/");
+      router.refresh();
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
@@ -69,13 +90,13 @@ export default function Shell({ children }: { children: ReactNode }) {
                 <p className="font-semibold">{user?.name || "Usuario"}</p>
                 <p className="text-slate-500 text-xs">{user?.email || "nao autenticado"}</p>
               </div>
-              <Link
-                href="/"
-                className="block px-3 py-2 text-sm hover:bg-slate-50"
-                onClick={() => setUserMenuOpen(false)}
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="block w-full text-left px-3 py-2 text-sm hover:bg-slate-50"
               >
                 Sair
-              </Link>
+              </button>
             </div>
           )}
         </div>

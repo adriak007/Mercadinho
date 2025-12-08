@@ -1,40 +1,43 @@
 export const runtime = "nodejs";
 
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import * as jwt from "jsonwebtoken";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/models/User";
-
-const JWT_SECRET = process.env.JWT_SECRET;
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 export async function GET() {
-  if (!JWT_SECRET) {
-    return NextResponse.json(
-      { error: "JWT_SECRET nao configurado" },
-      { status: 500 }
-    );
-  }
-
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth_token")?.value;
+    const session = await getServerSession(authOptions);
+    let userId = session?.user?.id;
 
-    if (!token)
+    if (!userId) {
+      const token = (await cookies()).get("auth_token")?.value;
+      if (token && process.env.JWT_SECRET) {
+        try {
+          const payload = jwt.verify(token, process.env.JWT_SECRET) as { sub?: string };
+          userId = payload.sub;
+        } catch {
+          // ignore
+        }
+      }
+    }
+
+    if (!userId) {
       return NextResponse.json({ error: "Nao autenticado" }, { status: 401 });
-
-    const payload = jwt.verify(token, JWT_SECRET) as { sub: string };
+    }
 
     await connectToDatabase();
-    const user = await User.findById(payload.sub).select(
-      "name email role logo"
-    );
+    const user = await User.findById(userId).select("name email role logo");
 
-    if (!user)
+    if (!user) {
       return NextResponse.json(
         { error: "Usuario nao encontrado" },
         { status: 404 }
       );
+    }
 
     return NextResponse.json({
       name: user.name,

@@ -1,34 +1,37 @@
 export const runtime = "nodejs";
 
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import * as jwt from "jsonwebtoken"; // CORRETO PARA TYPESCRIPT
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/models/User";
-
-const JWT_SECRET = process.env.JWT_SECRET;
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 export async function POST(request: Request) {
-  if (!JWT_SECRET) {
-    return NextResponse.json(
-      { error: "JWT_SECRET nao configurado" },
-      { status: 500 }
-    );
-  }
-
   try {
-    // ⬇️ cookies() AGORA É ASSÍNCRONO – TEM QUE TER await
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth_token")?.value;
+    const session = await getServerSession(authOptions);
+    let userId = session?.user?.id;
 
-    if (!token) {
+    if (!userId) {
+      const token = (await cookies()).get("auth_token")?.value;
+      if (token && process.env.JWT_SECRET) {
+        try {
+          const payload = jwt.verify(token, process.env.JWT_SECRET) as { sub?: string };
+          userId = payload.sub;
+        } catch {
+          // ignore
+        }
+      }
+    }
+
+    if (!userId) {
       return NextResponse.json(
         { error: "Nao autenticado" },
         { status: 401 }
       );
     }
 
-    const payload = jwt.verify(token, JWT_SECRET) as { sub: string };
     const { logo } = await request.json();
 
     if (!logo || typeof logo !== "string") {
@@ -38,7 +41,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // limite simples para evitar envio muito grande (base64) ~6MB
     if (logo.length > 6_000_000) {
       return NextResponse.json(
         { error: "Logo muito grande" },
@@ -47,7 +49,7 @@ export async function POST(request: Request) {
     }
 
     await connectToDatabase();
-    await User.findByIdAndUpdate(payload.sub, { logo });
+    await User.findByIdAndUpdate(userId, { logo });
 
     return NextResponse.json({
       message: "Logo atualizada",
