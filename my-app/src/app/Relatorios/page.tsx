@@ -60,15 +60,24 @@ export default function RelatoriosPage() {
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [submitted, setSubmitted] = useState<Filters | null>(null);
 
-  const onChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type, checked } = e.target;
-    setFilters((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+const onChange = (
+  e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+) => {
+  const target = e.target;
+
+  const { name, value, type } = target;
+
+  // Se for checkbox, precisamos garantir que o target é um HTMLInputElement
+  const finalValue =
+    type === "checkbox"
+      ? (target as HTMLInputElement).checked
+      : value;
+
+  setFilters((prev) => ({
+    ...prev,
+    [name]: finalValue,
+  }));
+};
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
