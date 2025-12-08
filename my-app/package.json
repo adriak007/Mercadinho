@@ -9,6 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+<<<<<<< Updated upstream
+=======
+    "bcryptjs": "^2.4.3",
+    "mongodb": "^7.0.0",
+    "mongoose": "^8.8.1",
+>>>>>>> Stashed changes
     "next": "16.0.7",
     "react": "19.2.0",
     "react-dom": "19.2.0"
