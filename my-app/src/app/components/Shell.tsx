@@ -1,14 +1,41 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import logoTop from "../Images/Kero Caixa Sem Fundo.png";
 import MenuBarComponent from "./MenuBarComponent";
 
+type UserInfo = {
+  name: string;
+  email: string;
+};
+
 export default function Shell({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [user, setUser] = useState<UserInfo | null>(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await fetch("/api/user/me", {
+          credentials: "include",
+          cache: "no-store",
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data?.name && data?.email) {
+          setUser({ name: data.name, email: data.email });
+        }
+      } catch {
+        // ignora erro
+      }
+    };
+    loadUser();
+  }, []);
+
+  const avatarLetter = user?.name?.[0]?.toUpperCase() || "U";
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
@@ -33,14 +60,14 @@ export default function Shell({ children }: { children: ReactNode }) {
             aria-label="Menu do usuario"
           >
             <div className="h-9 w-9 bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-sm font-semibold">
-              U
+              {avatarLetter}
             </div>
           </button>
           {userMenuOpen && (
             <div className="absolute right-0 top-12 w-44 rounded-sm border border-slate-200 bg-white text-slate-800 shadow-lg">
               <div className="px-3 py-2 text-sm border-b border-slate-100">
-                <p className="font-semibold">Usuario</p>
-                <p className="text-slate-500 text-xs">nao autenticado</p>
+                <p className="font-semibold">{user?.name || "Usuario"}</p>
+                <p className="text-slate-500 text-xs">{user?.email || "nao autenticado"}</p>
               </div>
               <Link
                 href="/"
