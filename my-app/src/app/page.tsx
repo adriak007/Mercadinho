@@ -72,7 +72,7 @@ export default function LoginPage() {
         redirect: false,
         email,
         password,
-        callbackUrl: "/Dashboard",
+        callbackUrl: "/dashboard",
       });
 
       if (result?.error) {
@@ -80,7 +80,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push(result?.url || "/Dashboard");
+      router.push(result?.url || "/dashboard");
       router.refresh();
     } catch (err) {
       setError("Erro de rede ao entrar.");
