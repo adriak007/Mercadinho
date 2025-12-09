@@ -23,7 +23,7 @@ const menus = [
     ],
   },
   {
-    group: "Cadastros",
+    group: "cadastros",
     icon: iconFolder,
     items: [
       { label: "Produtos", link: "/produtos", icon: iconBox },
