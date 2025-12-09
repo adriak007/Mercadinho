@@ -27,7 +27,7 @@ export default function AdicionarProdutoPage() {
           <div className="text-sm text-slate-500 flex items-center gap-2">
             <span>Inicio</span>
             <span>/</span>
-            <Link href="/Produtos" className="text-emerald-600 hover:underline">
+            <Link href="/produtos" className="text-emerald-600 hover:underline">
               Produtos
             </Link>
             <span>/</span>
@@ -68,7 +68,7 @@ export default function AdicionarProdutoPage() {
               Cadastrar
             </button>
             <Link
-              href="/Produtos"
+              href="/produtos"
               className="inline-flex items-center gap-2 rounded-sm bg-rose-500 px-4 py-2 text-white font-semibold hover:bg-rose-600 transition"
             >
               Cancelar

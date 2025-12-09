@@ -32,7 +32,7 @@ export default function ProdutosPage() {
         <div className="rounded-sm border border-slate-200 bg-white shadow-sm">
           <div className="flex flex-wrap items-center gap-3 p-4">
             <Link
-              href="/Produtos/Adicionar"
+              href="/produtos/adicionar"
               className="inline-flex items-center gap-2 rounded-sm bg-emerald-600 px-4 py-2 text-white text-sm font-semibold hover:bg-emerald-700 transition"
             >
               + Adicionar
