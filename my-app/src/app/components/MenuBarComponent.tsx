@@ -18,16 +18,16 @@ const menus = [
     group: "Geral",
     icon: iconGeneral,
     items: [
-      { label: "Inicio", link: "/Dashboard", icon: iconGeneral },
-      { label: "Caixa", link: "/Caixa", icon: iconMoney },
+      { label: "Inicio", link: "/dashboard", icon: iconGeneral },
+      { label: "Caixa", link: "/caixa", icon: iconMoney },
     ],
   },
   {
     group: "Cadastros",
     icon: iconFolder,
     items: [
-      { label: "Produtos", link: "/Produtos", icon: iconBox },
-      { label: "Relatorios", link: "/Relatorios", icon: iconReport },
+      { label: "Produtos", link: "/produtos", icon: iconBox },
+      { label: "Relatorios", link: "/relatorios", icon: iconReport },
     ],
   },
   {
