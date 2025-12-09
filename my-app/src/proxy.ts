@@ -16,9 +16,7 @@ export default async function proxy(request: NextRequest, _event: NextFetchEvent
   const pathname = request.nextUrl.pathname;
   const isProtected = PROTECTED_PATHS.some((path) => pathname.startsWith(path));
 
-  if (!isProtected) {
-    return NextResponse.next();
-  }
+  if (!isProtected) return NextResponse.next();
 
   const token = await getToken({
     req: request,
@@ -32,9 +30,7 @@ export default async function proxy(request: NextRequest, _event: NextFetchEvent
     try {
       jwt.verify(authToken, process.env.JWT_SECRET);
       return NextResponse.next();
-    } catch {
-      // segue para redirect
-    }
+    } catch {}
   }
 
   const signInUrl = new URL("/", request.url);
