@@ -221,7 +221,7 @@ export default function LoginPage() {
           <div className="text-center text-sm text-slate-700 space-y-2">
             <p>
               Ainda nao tem uma conta?{" "}
-              <Link href="/Cadastro" className="font-semibold hover:underline">
+              <Link href="/cadastro" className="font-semibold hover:underline">
                 Experimente gratis!
               </Link>
             </p>
