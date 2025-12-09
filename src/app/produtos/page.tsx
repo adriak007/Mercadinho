@@ -1,15 +1,15 @@
 import Link from "next/link";
 import Shell from "../components/Shell";
+import { deleteProductAction, listProducts } from "../actions/products";
 
-const placeholderProducts = [
-  { code: "001", name: "Produto exemplo A", price: "52,00", stock: "0,00" },
-  { code: "002", name: "Produto exemplo B", price: "69,00", stock: "0,00" },
-  { code: "003", name: "Produto exemplo C", price: "75,00", stock: "0,00" },
-  { code: "004", name: "Produto exemplo D", price: "55,00", stock: "0,00" },
-  { code: "005", name: "Produto exemplo E", price: "34,00", stock: "0,00" },
-];
+async function deleteProductFormAction(formData: FormData) {
+  "use server";
+  await deleteProductAction(formData);
+}
 
-export default function ProdutosPage() {
+export default async function ProdutosPage() {
+  const products = await listProducts();
+
   return (
     <Shell>
       <main className="p-8">
@@ -50,7 +50,7 @@ export default function ProdutosPage() {
                 className="rounded-sm border border-slate-200 px-4 py-2 text-sm text-slate-800 w-64 focus:outline-none focus:ring-2 focus:ring-emerald-400"
               />
               <button className="rounded-sm border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
-                🔍
+                ĐY"?
               </button>
               <button className="rounded-sm bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 transition">
                 Busca avancada
@@ -70,19 +70,35 @@ export default function ProdutosPage() {
                 </tr>
               </thead>
               <tbody>
-                {placeholderProducts.map((product) => (
-                  <tr
-                    key={product.code}
-                    className="border-t border-slate-100 hover:bg-slate-50"
-                  >
+                {products.length === 0 && (
+                  <tr>
+                    <td className="px-4 py-6 text-center text-slate-500" colSpan={5}>
+                      Nenhum produto cadastrado.
+                    </td>
+                  </tr>
+                )}
+                {products.map((product) => (
+                  <tr key={product.id} className="border-t border-slate-100 hover:bg-slate-50">
                     <td className="px-4 py-3">{product.code}</td>
                     <td className="px-4 py-3">{product.name}</td>
-                    <td className="px-4 py-3">{product.price}</td>
+                    <td className="px-4 py-3">{formatCurrency(product.price)}</td>
                     <td className="px-4 py-3">{product.stock}</td>
-                    <td className="px-4 py-3 text-right">
-                      <button className="rounded-sm bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800 transition">
-                        Movimentacoes
-                      </button>
+                    <td className="px-4 py-3 text-right space-x-2">
+                      <Link
+                        href={`/produtos/${product.id}`}
+                        className="rounded-sm bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800 transition"
+                      >
+                        Editar
+                      </Link>
+                      <form action={deleteProductFormAction} className="inline">
+                        <input type="hidden" name="id" value={product.id} />
+                        <button
+                          type="submit"
+                          className="rounded-sm bg-rose-500 px-3 py-2 text-xs font-semibold text-white hover:bg-rose-600 transition"
+                        >
+                          Excluir
+                        </button>
+                      </form>
                     </td>
                   </tr>
                 ))}
@@ -93,4 +109,8 @@ export default function ProdutosPage() {
       </main>
     </Shell>
   );
+}
+
+function formatCurrency(value: number) {
+  return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
