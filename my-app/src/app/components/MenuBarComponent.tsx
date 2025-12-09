@@ -33,7 +33,7 @@ const menus = [
   {
     group: "Sistema",
     icon: iconConfig,
-    items: [{ label: "Configuracoes", link: "/Config", icon: iconTool }],
+    items: [{ label: "Configuracoes", link: "/config", icon: iconTool }],
   },
 ];
 
