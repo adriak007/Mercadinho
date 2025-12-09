@@ -14,6 +14,17 @@ import carousel2 from "./Images/Caixa sem fundo2.png";
 
 type Slide = { id: string; image: StaticImageData; isClone?: boolean };
 
+function FieldErrorBadge({ message }: { message: string }) {
+  return (
+    <div className="pointer-events-none absolute left-0 top-full mt-1 inline-flex items-center gap-2 rounded-md border border-[#3a8620]/30 bg-[#e6f5dd] px-3 py-1 text-xs text-[#245713] shadow-sm">
+      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#3a8620]/10 text-[10px] font-semibold text-[#245713]">
+        !
+      </span>
+      <span>{message}</span>
+    </div>
+  );
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const baseSlides = useMemo<Slide[]>(
@@ -35,9 +46,27 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [slideIndex, setSlideIndex] = useState(1);
   const [transitioning, setTransitioning] = useState(false);
   const emailInvalid = email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const clearFieldError = (field: string) =>
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  const showFieldError = (field: string, message: string) => {
+    setFieldErrors((prev) => ({ ...prev, [field]: message }));
+    setTimeout(() => {
+      setFieldErrors((prev) => {
+        if (prev[field] !== message) return prev;
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }, 2000);
+  };
 
   const goToIndex = (next: number) => {
     if (transitioning) return; // avoid double clicks during animation
@@ -64,7 +93,20 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailInvalid) return;
+    let hasError = false;
+    if (!email.trim()) {
+      showFieldError("email", "Preencha este campo");
+      hasError = true;
+    } else if (emailInvalid) {
+      showFieldError("email", "Digite um e-mail valido.");
+      hasError = true;
+    }
+    if (!password.trim()) {
+      showFieldError("password", "Preencha este campo");
+      hasError = true;
+    }
+    if (hasError) return;
+
     setLoading(true);
     setError(null);
     try {
@@ -166,34 +208,43 @@ export default function LoginPage() {
             />
           </div>
 
-          <form className="space-y-4" onSubmit={handleLogin}>
-            <label className="flex flex-col gap-2 text-sm text-slate-700">
+          <form className="space-y-4" onSubmit={handleLogin} noValidate>
+            <label className="relative flex flex-col gap-2 text-sm text-slate-700">
               <span>E-mail</span>
               <input
                 type="email"
+                name="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  clearFieldError("email");
+                }}
                 className="w-full rounded-sm border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
                 placeholder="Digite seu e-mail"
-                required
+                aria-invalid={Boolean(fieldErrors.email)}
               />
               {emailInvalid && (
                 <span className="text-xs text-rose-500">
                   Digite um e-mail valido. Ex: seuemail@gmail.com
                 </span>
               )}
+              {fieldErrors.email && <FieldErrorBadge message={fieldErrors.email} />}
             </label>
 
-            <label className="flex flex-col gap-2 text-sm text-slate-700">
+            <label className="relative flex flex-col gap-2 text-sm text-slate-700">
               <span>Senha</span>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
+                  name="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    clearFieldError("password");
+                  }}
                   className="w-full rounded-sm border border-slate-300 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
                   placeholder="Digite sua senha"
-                  required
+                  aria-invalid={Boolean(fieldErrors.password)}
                 />
                 <button
                   type="button"
@@ -204,6 +255,7 @@ export default function LoginPage() {
                   <Image src={showPassword ? eyeOn : eyeOff} alt="" className="h-5 w-5" />
                 </button>
               </div>
+              {fieldErrors.password && <FieldErrorBadge message={fieldErrors.password} />}
             </label>
 
             {error && <p className="text-sm text-rose-600">{error}</p>}
@@ -217,7 +269,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-sm bg-slate-900 text-white py-3 font-semibold hover:bg-slate-800 transition disabled:opacity-60"
+              className="w-full rounded-sm bg-[#3a8620] text-white py-3 font-semibold hover:bg-[#326f1b] transition disabled:opacity-60"
             >
               {loading ? "Entrando..." : "Acessar minha conta"}
             </button>

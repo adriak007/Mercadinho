@@ -12,6 +12,19 @@ import eyeOff from "../Images/eye-off-svgrepo-com.svg";
 import carousel1 from "../Images/Caixa sem fundo1.png";
 import carousel2 from "../Images/Caixa sem fundo2.png";
 
+type FormField = "company" | "name" | "phone" | "whatsapp" | "email" | "password";
+
+function FieldErrorBadge({ message }: { message: string }) {
+  return (
+    <div className="pointer-events-none absolute left-0 top-full mt-1 inline-flex items-center gap-2 rounded-md border border-[#3a8620]/30 bg-[#e6f5dd] px-3 py-1 text-xs text-[#245713] shadow-sm">
+      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#3a8620]/10 text-[10px] font-semibold text-[#245713]">
+        !
+      </span>
+      <span>{message}</span>
+    </div>
+  );
+}
+
 export default function CadastroPage() {
   const router = useRouter();
   const baseSlides = [carousel1, carousel2];
@@ -29,8 +42,31 @@ export default function CadastroPage() {
   const [transitioning, setTransitioning] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const clearFieldError = (field: FormField) =>
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  const updateField = (field: FormField) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    clearFieldError(field);
+    handleChange(field)(e);
+  };
+  const emailInvalid = form.email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+  const showFieldError = (field: FormField, message: string) => {
+    setFieldErrors((prev) => ({ ...prev, [field]: message }));
+    setTimeout(() => {
+      setFieldErrors((prev) => {
+        if (prev[field] !== message) return prev;
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }, 2000);
+  };
 
   const nextSlide = () => {
     setTransitioning(true);
@@ -63,6 +99,32 @@ export default function CadastroPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let hasError = false;
+    if (!form.company.trim()) {
+      showFieldError("company", "Preencha este campo");
+      hasError = true;
+    }
+    if (!form.name.trim()) {
+      showFieldError("name", "Preencha este campo");
+      hasError = true;
+    }
+    if (!form.phone.trim()) {
+      showFieldError("phone", "Preencha este campo");
+      hasError = true;
+    }
+    if (!form.email.trim()) {
+      showFieldError("email", "Preencha este campo");
+      hasError = true;
+    } else if (emailInvalid) {
+      showFieldError("email", "Digite um e-mail valido.");
+      hasError = true;
+    }
+    if (!form.password.trim()) {
+      showFieldError("password", "Preencha este campo");
+      hasError = true;
+    }
+    if (hasError) return;
+
     setLoading(true);
     setError(null);
     try {
@@ -154,20 +216,57 @@ export default function CadastroPage() {
             <p className="text-slate-500 text-sm">Crie sua conta em poucos passos</p>
           </div>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <TextField label="Nome da empresa" required value={form.company} onChange={handleChange("company")} />
-            <TextField label="Nome completo" required value={form.name} onChange={handleChange("name")} />
-            <div className="grid md:grid-cols-2 gap-3">
-              <TextField label="Telefone" required value={form.phone} onChange={handleChange("phone")} />
-              <TextField label="Whatsapp (Opcional)" value={form.whatsapp} onChange={handleChange("whatsapp")} />
-            </div>
-            <TextField label="E-mail" required type="email" value={form.email} onChange={handleChange("email")} />
+          <form className="space-y-4" onSubmit={handleSubmit} noValidate>
             <TextField
+              name="company"
+              label="Nome da empresa"
+              required
+              value={form.company}
+              onChange={updateField("company")}
+              error={fieldErrors.company}
+            />
+            <TextField
+              name="name"
+              label="Nome completo"
+              required
+              value={form.name}
+              onChange={updateField("name")}
+              error={fieldErrors.name}
+            />
+            <div className="grid md:grid-cols-2 gap-3">
+              <TextField
+                name="phone"
+                label="Telefone"
+                required
+                value={form.phone}
+                onChange={updateField("phone")}
+                error={fieldErrors.phone}
+              />
+              <TextField
+                name="whatsapp"
+                label="Whatsapp (Opcional)"
+                value={form.whatsapp}
+                onChange={updateField("whatsapp")}
+                error={fieldErrors.whatsapp}
+              />
+            </div>
+            <TextField
+              name="email"
+              label="E-mail"
+              required
+              type="email"
+              value={form.email}
+              onChange={updateField("email")}
+              error={fieldErrors.email}
+            />
+            <TextField
+              name="password"
               label="Senha"
               required
               type={showPassword ? "text" : "password"}
               value={form.password}
-              onChange={handleChange("password")}
+              onChange={updateField("password")}
+              error={fieldErrors.password}
               rightSlot={
                 <button
                   type="button"
@@ -185,7 +284,7 @@ export default function CadastroPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-sm bg-slate-900 text-white py-3 font-semibold hover:bg-slate-800 transition disabled:opacity-60"
+              className="w-full rounded-sm bg-[#3a8620] text-white py-3 font-semibold hover:bg-[#326f1b] transition disabled:opacity-60"
             >
               {loading ? "Cadastrando..." : "Cadastrar"}
             </button>
@@ -215,19 +314,23 @@ function TextField({
   label,
   type = "text",
   required,
+  name,
   value,
   onChange,
+  error,
   rightSlot,
 }: {
   label: string;
   type?: string;
   required?: boolean;
+  name?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
   rightSlot?: React.ReactNode;
 }) {
   return (
-    <label className="flex flex-col gap-2 text-sm text-slate-700">
+    <label className="relative flex flex-col gap-2 text-sm text-slate-700">
       <span>
         {label}
         {required ? "*" : ""}
@@ -235,8 +338,10 @@ function TextField({
       <div className="relative">
         <input
           type={type}
+          name={name}
           value={value}
           onChange={onChange}
+          aria-invalid={Boolean(error)}
           className="w-full rounded-sm border border-slate-300 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
           placeholder={`Digite ${label.toLowerCase()}`}
           required={required}
@@ -246,6 +351,9 @@ function TextField({
             {rightSlot}
           </div>
         )}
+      </div>
+      <div className="min-h-[24px]">
+        {error && <FieldErrorBadge message={error} />}
       </div>
     </label>
   );
