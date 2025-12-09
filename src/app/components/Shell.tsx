@@ -77,10 +77,10 @@ export default function Shell({ children }: { children: ReactNode }) {
           <span className="hidden sm:inline">Visao geral</span>
           <button
             onClick={() => setUserMenuOpen((prev) => !prev)}
-            className="h-9 w-9 rounded-sm bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            className="h-9 w-9 rounded-sm bg-slate-800 border border-slate-700 flex items-center justify-center overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
             aria-label="Menu do usuario"
           >
-            <div className="h-9 w-9 bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-sm font-semibold">
+            <div className="h-9 w-9 bg-gradient-to-br from-[#4aa02d] to-[#2f6b19] flex items-center justify-center text-sm font-semibold">
               {avatarLetter}
             </div>
           </button>

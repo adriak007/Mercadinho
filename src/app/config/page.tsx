@@ -21,7 +21,7 @@ export default function ConfigPage() {
 
         <section className="rounded-sm border border-slate-200 bg-white shadow-sm p-6">
           <div className="mb-6">
-            <div className="inline-flex items-center gap-2 border-b-2 border-emerald-600 pb-2 text-emerald-700 font-semibold">
+            <div className="inline-flex items-center gap-2 border-b-2 border-[#3a8620] pb-2 text-[#2f6b19] font-semibold">
               Dados gerais
             </div>
           </div>
@@ -40,7 +40,7 @@ export default function ConfigPage() {
           </div>
 
           <div className="mt-8 flex items-center gap-3">
-            <button className="inline-flex items-center gap-2 rounded-sm bg-emerald-600 px-4 py-2 text-white font-semibold hover:bg-emerald-700 transition">
+            <button className="inline-flex items-center gap-2 rounded-sm bg-[#3a8620] px-4 py-2 text-white font-semibold hover:bg-[#326f1b] transition">
               Atualizar
             </button>
             <button className="inline-flex items-center gap-2 rounded-sm bg-rose-500 px-4 py-2 text-white font-semibold hover:bg-rose-600 transition">
@@ -57,7 +57,7 @@ function Select({ label, options }: { label: string; options: string[] }) {
   return (
     <label className="space-y-1 text-sm text-slate-700">
       <span className="block font-semibold">{label}</span>
-      <select className="w-full rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+      <select className="w-full rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3a8620]">
         {options.map((opt) => (
           <option key={opt}>{opt}</option>
         ))}

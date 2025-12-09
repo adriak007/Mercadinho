@@ -233,7 +233,7 @@ const onChange = (
             <div className="flex items-center gap-3 pt-4">
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 rounded-sm bg-emerald-600 px-4 py-2 text-white font-semibold hover:bg-emerald-700 transition"
+                className="inline-flex items-center gap-2 rounded-sm bg-[#3a8620] px-4 py-2 text-white font-semibold hover:bg-[#326f1b] transition"
               >
                 Gerar
               </button>
@@ -295,7 +295,7 @@ function SelectField({
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        className="w-full rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
       >
         {options.map((opt) => (
           <option key={opt} value={opt}>
@@ -329,7 +329,7 @@ function TextField({
         value={value}
         placeholder={placeholder}
         onChange={onChange}
-        className="w-full rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        className="w-full rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
       />
     </label>
   );
@@ -359,7 +359,7 @@ function DateRange({
           name={fromName}
           value={fromValue}
           onChange={onChange}
-          className="rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          className="rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
         />
         <span className="text-center text-slate-400">a</span>
         <input
@@ -367,7 +367,7 @@ function DateRange({
           name={toName}
           value={toValue}
           onChange={onChange}
-          className="rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          className="rounded-sm border border-slate-200 bg-white px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
         />
       </div>
     </div>
@@ -392,7 +392,7 @@ function CheckboxField({
         name={name}
         checked={checked}
         onChange={onChange}
-        className="h-4 w-4 rounded-sm border-slate-300 text-emerald-600 focus:ring-emerald-400"
+        className="h-4 w-4 rounded-sm border-slate-300 text-[#3a8620] focus:ring-[#3a8620]"
       />
       <span>{label}</span>
     </label>

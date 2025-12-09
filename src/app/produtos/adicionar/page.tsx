@@ -12,7 +12,7 @@ export default function AdicionarProdutoPage() {
           <div className="text-sm text-slate-500 flex items-center gap-2">
             <span>Inicio</span>
             <span>/</span>
-            <Link href="/produtos" className="text-emerald-600 hover:underline">
+            <Link href="/produtos" className="text-[#3a8620] hover:underline">
               Produtos
             </Link>
             <span>/</span>

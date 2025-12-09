@@ -101,7 +101,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-white text-slate-900">
-      <section className="relative hidden lg:flex items-center justify-center bg-emerald-700 px-8 overflow-hidden">
+      <section className="relative hidden lg:flex items-center justify-center bg-[#3a8620] px-8 overflow-hidden">
         <div className="w-full h-full overflow-hidden">
           <div
             className="flex h-full transition-transform duration-500 ease-in-out"
@@ -158,7 +158,12 @@ export default function LoginPage() {
       <section className="flex flex-col items-center justify-center px-6 py-10">
         <div className="w-full max-w-xl space-y-8">
           <div className="text-center space-y-4">
-            <Image src={logo} alt="Kero Caixa" className="mx-auto h-14 w-auto" priority />
+            <Image
+              src={logo}
+              alt="Kero Caixa"
+              className="mx-auto h-[200px] w-[200px] object-contain"
+              priority
+            />
           </div>
 
           <form className="space-y-4" onSubmit={handleLogin}>
@@ -168,7 +173,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-sm border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full rounded-sm border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
                 placeholder="Digite seu e-mail"
                 required
               />
@@ -186,7 +191,7 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-sm border border-slate-300 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full rounded-sm border border-slate-300 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
                   placeholder="Digite sua senha"
                   required
                 />

@@ -73,7 +73,7 @@ export default function ProductForm({ action, initialData, mode }: ProductFormPr
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-3 text-sm font-semibold transition ${
               activeTab === tab
-                ? "border-b-2 border-emerald-600 text-emerald-700"
+                ? "border-b-2 border-[#3a8620] text-[#2f6b19]"
                 : "text-slate-600 hover:bg-slate-50"
             }`}
             type="button"
@@ -102,14 +102,14 @@ export default function ProductForm({ action, initialData, mode }: ProductFormPr
         </div>
 
         {state.message && (
-          <div className={`mx-6 mb-4 rounded-sm border px-3 py-2 text-sm ${state.ok ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-rose-200 bg-rose-50 text-rose-700"}`}>
+          <div className={`mx-6 mb-4 rounded-sm border px-3 py-2 text-sm ${state.ok ? "border-[#b7d9ab] bg-[#e8f2e3] text-[#2f6b19]" : "border-rose-200 bg-rose-50 text-rose-700"}`}>
             {state.message}
           </div>
         )}
 
         <footer className="flex items-center gap-3 border-t border-slate-200 px-6 py-4">
           <button
-            className="inline-flex items-center gap-2 rounded-sm bg-emerald-600 px-4 py-2 text-white font-semibold hover:bg-emerald-700 transition disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-sm bg-[#3a8620] px-4 py-2 text-white font-semibold hover:bg-[#326f1b] transition disabled:opacity-60"
             type="submit"
             disabled={isPending}
           >
@@ -167,7 +167,7 @@ function DetalhesTab({ defaults }: { defaults: Required<ProductFormData> }) {
         <textarea
           name="notes"
           defaultValue={defaults.notes}
-          className="w-full rounded-sm border border-slate-200 px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 h-28 resize-none"
+          className="w-full rounded-sm border border-slate-200 px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3a8620] h-28 resize-none"
           placeholder="Detalhes adicionais sobre o produto"
         />
       </label>
@@ -225,7 +225,7 @@ function TextField({
       <input
         name={name}
         defaultValue={defaultValue}
-        className="w-full rounded-sm border border-slate-200 px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        className="w-full rounded-sm border border-slate-200 px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
         placeholder={placeholder || "Preencha o campo"}
         required={required}
       />
@@ -262,7 +262,7 @@ function NumberField({
         step={step}
         min={min}
         placeholder={placeholder || "0,00"}
-        className="w-full rounded-sm border border-slate-200 px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        className="w-full rounded-sm border border-slate-200 px-3 py-2 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
         required={required}
       />
     </label>
@@ -284,7 +284,7 @@ function CheckboxField({
         type="checkbox"
         name={name}
         defaultChecked={defaultChecked}
-        className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+        className="h-4 w-4 rounded border-slate-300 text-[#3a8620] focus:ring-[#3a8620]"
       />
       {label}
     </label>

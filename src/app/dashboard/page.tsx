@@ -65,7 +65,7 @@ function SummaryCard({
 }) {
   const toneClasses =
     tone === "ok"
-      ? "bg-emerald-600 text-white"
+      ? "bg-[#3a8620] text-white"
       : "bg-rose-500 text-white";
 
   return (

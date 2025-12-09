@@ -6,3 +6,10 @@ body {
   color: var(--foreground);
   font-family: sans-serif;
 }
+
+:root {
+  --brand: #3a8620;
+  --brand-dark: #326f1b;
+  --brand-light: #4aa02d;
+  --brand-soft: #e8f2e3;
+}

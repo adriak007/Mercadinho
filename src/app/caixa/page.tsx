@@ -11,7 +11,7 @@ export default async function CaixaPage() {
         <div className="bg-white shadow-md rounded-sm p-6">
           <header className="flex items-center justify-between mb-4">
             <h1 className="text-xl font-semibold uppercase tracking-wide">Localize um produto/servico abaixo</h1>
-            <div className="flex items-center gap-2 bg-emerald-600 text-white rounded-sm px-4 py-2 text-xs font-semibold uppercase tracking-wide">
+            <div className="flex items-center gap-2 bg-[#3a8620] text-white rounded-sm px-4 py-2 text-xs font-semibold uppercase tracking-wide">
               <div className="text-left">
                 <p>Cliente: ao consumidor</p>
                 <p>Vendedor: cliente</p>

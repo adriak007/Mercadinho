@@ -85,7 +85,7 @@ export default function CaixaForm({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Digite o codigo ou o nome"
-            className="w-full rounded-sm border border-amber-300 bg-amber-50 px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            className="w-full rounded-sm border border-amber-300 bg-amber-50 px-4 py-3 text-slate-800 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
           />
 
           {filtered.length > 0 && (
@@ -127,7 +127,7 @@ export default function CaixaForm({
                   min="1"
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-full rounded-sm border border-slate-200 bg-white px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  className="w-full rounded-sm border border-slate-200 bg-white px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
                   placeholder="1"
                 />
               </label>
@@ -208,14 +208,14 @@ export default function CaixaForm({
             <button
               type="submit"
               disabled={cart.length === 0 || pending}
-              className="w-full rounded-sm text-white py-3 text-sm font-semibold uppercase tracking-wide transition bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60"
+              className="w-full rounded-sm text-white py-3 text-sm font-semibold uppercase tracking-wide transition bg-[#3a8620] hover:bg-[#326f1b] disabled:opacity-60"
             >
               {pending ? "Finalizando..." : "Finalizar venda"}
             </button>
           </div>
 
           {state.message && (
-            <div className={`text-sm rounded-sm px-3 py-2 border ${state.ok ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-rose-200 bg-rose-50 text-rose-700"}`}>
+            <div className={`text-sm rounded-sm px-3 py-2 border ${state.ok ? "border-[#b7d9ab] bg-[#e8f2e3] text-[#2f6b19]" : "border-rose-200 bg-rose-50 text-rose-700"}`}>
               {state.message}
             </div>
           )}
@@ -242,7 +242,7 @@ function Field({
       <input
         value={value || ""}
         readOnly={readOnly}
-        className="w-full rounded-sm border border-slate-200 bg-white px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+        className="w-full rounded-sm border border-slate-200 bg-white px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
         placeholder="Preencha o valor"
       />
     </label>

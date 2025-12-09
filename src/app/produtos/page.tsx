@@ -33,7 +33,7 @@ export default async function ProdutosPage() {
           <div className="flex flex-wrap items-center gap-3 p-4">
             <Link
               href="/produtos/adicionar"
-              className="inline-flex items-center gap-2 rounded-sm bg-emerald-600 px-4 py-2 text-white text-sm font-semibold hover:bg-emerald-700 transition"
+              className="inline-flex items-center gap-2 rounded-sm bg-[#3a8620] px-4 py-2 text-white text-sm font-semibold hover:bg-[#326f1b] transition"
             >
               + Adicionar
             </Link>
@@ -47,7 +47,7 @@ export default async function ProdutosPage() {
               <input
                 type="text"
                 placeholder="Buscar"
-                className="rounded-sm border border-slate-200 px-4 py-2 text-sm text-slate-800 w-64 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                className="rounded-sm border border-slate-200 px-4 py-2 text-sm text-slate-800 w-64 focus:outline-none focus:ring-2 focus:ring-[#3a8620]"
               />
               <button className="rounded-sm border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
                 ĐY"?
