@@ -9,7 +9,9 @@ export async function POST() {
     "next-auth.session-token",
     "__Secure-next-auth.session-token",
     "__Host-next-auth.session-token",
-    "auth_token"
+    "auth_token",
+    "__Secure-next-auth.callback-url",
+    "__Host-next-auth.csrf-token",
   ];
 
   cookiesToDelete.forEach((name) => {
