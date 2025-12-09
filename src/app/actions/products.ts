@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
+import Sale from "@/models/Sale";
 import type { ActionState } from "@/types/actions";
 import type { ProductDetail, ProductListItem, SaleItem } from "@/types/products";
 
@@ -220,6 +221,8 @@ export async function finalizeSaleAction(_: ActionState, formData: FormData): Pr
 
   await connectToDatabase();
 
+  const saleItems: SaleItem[] = [];
+
   for (const item of items) {
     if (!item.productId || item.quantity <= 0) {
       return fail("Itens invalidos.");
@@ -235,10 +238,34 @@ export async function finalizeSaleAction(_: ActionState, formData: FormData): Pr
       product.stock -= item.quantity;
       await product.save();
     }
+
+    saleItems.push({
+      productId: item.productId,
+      quantity: item.quantity,
+      price: item.price,
+    });
+  }
+
+  const valorTotal = saleItems.reduce((sum, current) => sum + current.price * current.quantity, 0);
+
+  try {
+    await Sale.create({
+      valorTotal,
+      itens: saleItems.map((i) => ({
+        productId: i.productId,
+        quantity: i.quantity,
+        price: i.price,
+        total: i.price * i.quantity,
+      })),
+    });
+  } catch (error) {
+    console.error("Erro ao salvar venda", error);
+    return fail("Nao foi possivel registrar a venda.");
   }
 
   revalidatePath("/produtos");
   revalidatePath("/caixa");
+  revalidatePath("/dashboard");
   return success("Venda finalizada e estoque atualizado.");
 }
 

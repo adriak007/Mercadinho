@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import Shell from "../components/Shell";
+import FluxoCaixaDiario from "@/components/dashboard/graficos/FluxoCaixaDiario";
+import GraficoVendasMensais from "@/components/dashboard/graficos/GraficoVendasMensais";
 
 export default function DashboardPage() {
   return (
@@ -23,14 +25,12 @@ export default function DashboardPage() {
         </section>
 
         <section className="grid lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2">
-            <SectionHeader title="Fluxo de caixa" />
-            <Placeholder height="h-64" message="Sem dados. Conecte seu financeiro." />
+          <Card className="lg:col-span-2 border-0 bg-transparent p-0 shadow-none">
+            <FluxoCaixaDiario />
           </Card>
 
-          <Card>
-            <SectionHeader title="Grafico de vendas" />
-            <Placeholder height="h-64" message="Sem dados. Importe ou cadastre vendas." />
+          <Card className="border-0 bg-transparent p-0 shadow-none">
+            <GraficoVendasMensais />
           </Card>
         </section>
 
