@@ -14,13 +14,15 @@ export async function POST() {
     "__Host-next-auth.csrf-token",
   ];
 
+  const deletionOptions = {
+    path: "/",
+    httpOnly: true,
+    secure: true,
+    expires: new Date(0),
+  };
+
   cookiesToDelete.forEach((name) => {
-    res.cookies.set({
-      name,
-      value: "",
-      path: "/",
-      maxAge: 0,
-    });
+    res.cookies.set(name, "", deletionOptions);
   });
 
   return res;
